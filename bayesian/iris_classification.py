@@ -6,12 +6,15 @@
 # Date:         2020/5/21
 '''
 
+import warnings
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from sklearn.preprocessing import StandardScaler
 from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
 from sklearn.pipeline import Pipeline
+
+warnings.filterwarnings('ignore')
 
 def iris_type(s):
     '''

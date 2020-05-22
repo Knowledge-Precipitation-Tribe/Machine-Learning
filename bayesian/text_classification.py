@@ -8,62 +8,75 @@
 
 import os
 import jieba
+import warnings
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
 
-LABEL_MAP = {'体育': 0, '女性': 1, '文学': 2, '校园': 3}
-# 加载停用词
-with open('../text_classification_data/stop/stopword.txt', 'rb') as f:
-    STOP_WORDS = [line.strip() for line in f.readlines()]
+warnings.filterwarnings('ignore')
 
-
-def load_data(base_path):
+def cut_words(file_path):
     """
-    :param base_path: 基础路径
-    :return: 分词列表，标签列表
+    对文本进行切词
+    :param file_path: txt文本路径
+    :return: 用空格分词的字符串
     """
-    documents = []
-    labels = []
+    text_with_spaces = ''
+    text=open(file_path, 'r', encoding='gb18030').read()
+    textcut = jieba.cut(text)
+    for word in textcut:
+        text_with_spaces += word + ' '
+    return text_with_spaces
 
-    for root, dirs, files in os.walk(base_path): # 循环所有文件并进行分词打标
-        for file in files:
-            label = root.split('\\')[-1] # 因为windows上路径符号自动转成\了，所以要转义下
-            labels.append(label)
-            filename = os.path.join(root, file)
-            with open(filename, 'rb') as f: # 因为字符集问题因此直接用二进制方式读取
-                content = f.read()
-                word_list = list(jieba.cut(content))
-                words = [wl for wl in word_list]
-                documents.append(' '.join(words))
-    return documents, labels
-
-
-def train_fun(td, tl, testd, testl):
+def loadfile(file_dir, label):
     """
-    构造模型并计算测试集准确率，字数限制变量名简写
-    :param td: 训练集数据
-    :param tl: 训练集标签
-    :param testd: 测试集数据
-    :param testl: 测试集标签
-    :return: 测试集准确率
+    将路径下的所有文件加载
+    :param file_dir: 保存txt文件目录
+    :param label: 文档标签
+    :return: 分词后的文档列表和标签
     """
-    # 计算矩阵
-    tt = TfidfVectorizer(stop_words=STOP_WORDS, max_df=0.5)
-    tf = tt.fit_transform(td)
-    # 训练模型
-    clf = MultinomialNB(alpha=0.001).fit(tf, tl)
-    # 模型预测
-    test_tf = TfidfVectorizer(stop_words=STOP_WORDS, max_df=0.5, vocabulary=tt.vocabulary_)
-    test_features = test_tf.fit_transform(testd)
-    predicted_labels = clf.predict(test_features)
-    # 获取结果
-    x = metrics.accuracy_score(testl, predicted_labels)
-    return x
+    file_list = os.listdir(file_dir)
+    words_list = []
+    labels_list = []
+    for file in file_list:
+        file_path = file_dir + '/' + file
+        words_list.append(cut_words(file_path))
+        labels_list.append(label)
+    return words_list, labels_list
 
+# 训练数据
+train_words_list1, train_labels1 = loadfile('../text_classification_data/train/女性', '女性')
+train_words_list2, train_labels2 = loadfile('../text_classification_data/train/体育', '体育')
+train_words_list3, train_labels3 = loadfile('../text_classification_data/train/文学', '文学')
+train_words_list4, train_labels4 = loadfile('../text_classification_data/train/校园', '校园')
 
-# text classification与代码同目录下
-train_documents, train_labels = load_data('../text_classification_data/train')
-test_documents, test_labels = load_data('../text_classification_data/test')
-x = train_fun(train_documents, train_labels, test_documents, test_labels)
-print(x)
+train_words_list = train_words_list1 + train_words_list2 + train_words_list3 + train_words_list4
+train_labels = train_labels1 + train_labels2 + train_labels3 + train_labels4
+
+# 测试数据
+test_words_list1, test_labels1 = loadfile('../text_classification_data/test/女性', '女性')
+test_words_list2, test_labels2 = loadfile('../text_classification_data/test/体育', '体育')
+test_words_list3, test_labels3 = loadfile('../text_classification_data/test/文学', '文学')
+test_words_list4, test_labels4 = loadfile('../text_classification_data/test/校园', '校园')
+
+test_words_list = test_words_list1 + test_words_list2 + test_words_list3 + test_words_list4
+test_labels = test_labels1 + test_labels2 + test_labels3 + test_labels4
+
+stop_words = open('../text_classification_data/stop/stopword.txt', 'r', encoding='utf-8').read()
+stop_words = stop_words.encode('utf-8').decode('utf-8-sig') # 列表头部\ufeff处理
+stop_words = stop_words.split('\n') # 根据分隔符分隔
+
+# 计算单词权重
+tf = TfidfVectorizer(stop_words=stop_words, max_df=0.5)
+
+train_features = tf.fit_transform(train_words_list)
+# 上面fit过了，这里transform
+test_features = tf.transform(test_words_list)
+
+# 多项式贝叶斯分类器
+from sklearn.naive_bayes import MultinomialNB
+clf = MultinomialNB(alpha=0.001).fit(train_features, train_labels)
+predicted_labels=clf.predict(test_features)
+
+# 计算准确率
+print('准确率为：', metrics.accuracy_score(test_labels, predicted_labels))
