@@ -6,13 +6,13 @@
 # Date:         2020/6/4
 '''
 
-# -*- coding: utf-8 -*-
 import pandas as pd
 import csv
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import calinski_harabaz_score
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -69,6 +69,8 @@ if __name__ == '__main__':
     # 训练数据
     prediction = gmm.predict(data)
     print(prediction)
+    # 指标分数越高，代表聚类效果越好，也就是相同类中的差异性小，不同类之间的差异性大。
+    print("Calinski-Harabaz : ",calinski_harabaz_score(data, prediction))
     # 将分组结果输出到CSV文件中
     data_ori.insert(0, '分组', prediction)
     data_ori.to_csv('./hero_out.csv', index=False, sep=',')
