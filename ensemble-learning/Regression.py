@@ -14,6 +14,7 @@ from sklearn.ensemble import VotingRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 
+
 def load_data():
     x, y = load_boston(return_X_y=True)
     x = StandardScaler().fit_transform(x)
