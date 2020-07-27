@@ -1,12 +1,34 @@
 # Machine-Learning
-# 阅读方式
+# 项目介绍
 
-- 语雀：[机器学习](https://www.yuque.com/books/share/460b2db9-de86-4134-b9c6-d1ae66693423?#)
-- Github: [Machine-Learning](https://github.com/Knowledge-Precipitation-Tribe/Machine-Learning)
+此项目是对机器学习内容的梳理，包括机器学习的基础库以及机器学习中的算法。项目整体以实战为主。
+
+# 内容
+
+- <a href = "">机器学习基础</a>
+  - <a href = "">Numpy</a>
+  - <a href = "">Pandas</a>
+  - <a href = "">Matplotlib</a>
+  - <a href = "">特征工程(Feature engineering)</a>
+- <a href = "">机器学习算法</a>
+  - <a href = "">线性回归(Linear Regression)</a>
+  - <a href = "">逻辑回归(Logistic Regression)</a>
+  - <a href = "">决策树(Decision Tree)</a>
+  - <a href = "">随机森林(Random Froest)</a>
+  - <a href = "">梯度提升树(GBDT)</a>
+  - <a href = "">XGBoost</a>
+  - <a href = "">LightGBM</a>
+  - <a href = "">支持向量机(SVM)</a>
+  - <a href = "">贝叶斯网络(Bayesian Network)</a>
+  - <a href = "">马尔科夫(Markov)</a>
+  - <a href = "">主题模型(Topic Model)</a>
+  - <a href = "">最大期望算法(EM)</a>
+  - <a href = "">聚类(Clusting)</a>
+  - <a href = "">K近邻算法(KNN)</a>
 
 
 
-# 相关资源
+# 推荐资源
 
 [1] [Avik-Jain](https://github.com/Avik-Jain): [100-Days-Of-ML-Code](https://github.com/Avik-Jain/100-Days-Of-ML-Code) 
 
