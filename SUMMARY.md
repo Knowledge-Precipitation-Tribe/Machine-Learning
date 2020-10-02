@@ -8,7 +8,9 @@
 
 ## 机器学习算法
 
-* [Untitled](ji-qi-xue-xi-suan-fa/untitled.md)
+* [信息论](ji-qi-xue-xi-suan-fa/xin-xi-lun/README.md)
+  * [Entropy](ji-qi-xue-xi-suan-fa/xin-xi-lun/untitled.md)
+* [决策树](ji-qi-xue-xi-suan-fa/untitled.md)
 
 ## TIPS
 
